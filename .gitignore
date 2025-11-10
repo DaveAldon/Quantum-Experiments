@@ -1,0 +1,27 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Qiskit
+*.qpy
+
+# Output files
+*.png
+*.pdf
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
