@@ -211,19 +211,8 @@ def grovers_algorithm(n_qubits, target_state, target_ssn=None, draw_circuit=Fals
     N = 2 ** n_qubits
     optimal_iterations = int(np.pi / 4 * np.sqrt(N))
     
-    print(f"\n{'='*70}")
-    print(f"SEARCHING SSN DATABASE")
-    print(f"{'='*70}")
-    if target_ssn:
-        print(f"Target SSN: {target_ssn} (Record #{int(target_state, 2)})")
-    else:
-        print(f"Target Record: {target_state} (#{int(target_state, 2)})")
-    print(f"Database Size: {N:,} records")
-    print(f"{'='*70}")
-    print(f"Classical Search: ~{N//2:,} queries average, {N:,} worst case")
-    print(f"Grover's Search: {optimal_iterations} queries")
-    print(f"Speedup Factor: ~{(N//2) / optimal_iterations:.1f}x faster!")
-    print(f"{'='*70}\n")
+    print(f"\nSearching {N} records for {target_ssn or target_state}")
+    print(f"Classical: ~{N//2} queries avg | Grover: {optimal_iterations} queries (~{(N//2) / optimal_iterations:.1f}x speedup)\n")
     
     # Create quantum circuit
     qc = QuantumCircuit(n_qubits, n_qubits)
@@ -244,12 +233,10 @@ def grovers_algorithm(n_qubits, target_state, target_ssn=None, draw_circuit=Fals
     
     # Measure
     qc.measure(range(n_qubits), range(n_qubits))
-    
     if draw_circuit:
-        print("Quantum Circuit:")
-        print(qc.draw(output='text', fold=-1))
+        print("\nQuantum Circuit:")
+        print(qc.draw(fold=-1))
         print()
-    
     return qc, optimal_iterations
 
 
@@ -585,25 +572,6 @@ Examples:
         speedup = classical_avg / quantum_queries
         
         print(f"{db_type:<20} {N_items:>12,}   {classical_avg:>12,}   {quantum_queries:>10}   {speedup:>8.1f}x")
-    
-    print("\n" + "="*70)
-    print("KEY INSIGHTS FOR SSN DATABASE SEARCH")
-    print("="*70)
-    print("✓ Grover's algorithm provides quadratic speedup: O(√N) vs O(N)")
-    print("✓ Critical for searching unindexed/unsorted databases")
-    print("✓ Speedup grows with database size:")
-    print("  - 256 records: 8x faster")
-    print("  - 1,024 records: 16x faster")
-    print("  - 16,384 records: 64x faster")
-    print("  - 65,536 records: 128x faster")
-    print("✓ Real SSNs (~1 billion combinations) would need ~30 qubits")
-    print("✓ Future quantum computers could search billion-record databases")
-    print("  in ~31,000 queries vs 500 million classically!")
-    print("\n" + "="*70)
-    print("PRIVACY NOTE: This is a demonstration using mock data.")
-    print("Real SSN databases must be encrypted and access-controlled.")
-    print("="*70 + "\n")
-
 
 if __name__ == "__main__":
     main()

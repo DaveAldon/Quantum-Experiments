@@ -16,7 +16,6 @@ venv/
 *.qpy
 
 # Output files
-*.png
 *.pdf
 
 # IDE
