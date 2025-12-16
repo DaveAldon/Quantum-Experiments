@@ -214,24 +214,29 @@ def grovers_algorithm(n_qubits, target_state, target_ssn=None, draw_circuit=Fals
     print(f"\nSearching {N} records for {target_ssn or target_state}")
     print(f"Classical: ~{N//2} queries avg | Grover: {optimal_iterations} queries (~{(N//2) / optimal_iterations:.1f}x speedup)\n")
     
-    # Create quantum circuit
+    # Creates a new quantum circuit with however many qubits we want
     qc = QuantumCircuit(n_qubits, n_qubits)
     
-    # Initialize in superposition
+    # Applies the Hadamard gate to the qubits, putting them into superposition.
     qc.h(range(n_qubits))
+    # Checkpoints so that the circuit optimizer, when the code is compiled, doesn't rearrange gates in ways that break the algorithm's logic
     qc.barrier()
     
-    # Apply Grover iterations
+    # Creates the oracle (self explanatory, right?), or subroutine, that marks the target we're looking for and applies a phase flip (multiplying the value by -1). This is the step from the circuit diagram with the blue boxes
     oracle = create_oracle(n_qubits, target_state)
+    # The diffuser amplifies the probability of measuring the correct answer
     diffuser = create_diffuser(n_qubits)
     
+    # Repeat the oracle and diffuser for the optimal number of iterations.
+    # optimal_iterations = The mathematically proven optimal number of times you need to repeat the oracle->diffuser cycle to find your target with near certainty
     for i in range(optimal_iterations):
         qc.compose(oracle, inplace=True)
         qc.barrier()
         qc.compose(diffuser, inplace=True)
         qc.barrier()
     
-    # Measure
+    # Measure all qubits to get the result. This is the final step in the circuit diagram with the measurement boxes.
+    # The qubits are collapsed to classical bits here.
     qc.measure(range(n_qubits), range(n_qubits))
     if draw_circuit:
         print("\nQuantum Circuit:")
